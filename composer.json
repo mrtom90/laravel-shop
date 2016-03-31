@@ -1,0 +1,14 @@
+{
+    "name": "mrtom90/laravel-shop",
+    "description": "Laravel Shop",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pham Thai Duong",
+            "email": "mrtom90@me.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
