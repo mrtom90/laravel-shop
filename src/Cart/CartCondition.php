@@ -1,7 +1,7 @@
 <?php namespace Mrtom90\LaravelShop\Cart;
-use Darryldecode\Cart\Exceptions\InvalidConditionException;
-use Darryldecode\Cart\Helpers\Helpers;
-use Darryldecode\Cart\Validators\CartConditionValidator;
+use Mrtom90\LaravelShop\Cart\Exceptions\InvalidConditionException;
+use Mrtom90\LaravelShop\Cart\Helpers\Helpers;
+use Mrtom90\LaravelShop\Cart\Validators\CartConditionValidator;
 
 /**
  * Created by PhpStorm.
