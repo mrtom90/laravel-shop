@@ -1,7 +1,8 @@
 <?php
-namespace Mrtom90\LaravelShop\Cart;
+namespace Mrtom90\LaravelShop\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Mrtom90\LaravelShop\Cart\Cart;
 
 class CartServiceProvider extends ServiceProvider
 {
@@ -12,6 +13,17 @@ class CartServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = false;
+
+    public function boot()
+    {
+
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'courier');
+
+        if (!$this->app->routesAreCached()) {
+            require __DIR__ . '/../Http/routes.php';
+        }
+
+    }
 
     /**
      * Register the service provider.

@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 /**
  * @property mixed|null price
  * @property mixed|null quantity
+ * @property mixed|null conditions
  */
 class ItemCollection extends Collection
 {
@@ -52,11 +53,17 @@ class ItemCollection extends Collection
     /**
      * get the single price in which conditions are already applied
      *
+     * @param bool $multipleByQuantity
      * @return mixed|null
      */
-    public function getPriceWithConditions()
+    public function getPriceWithConditions($multipleByQuantity = false)
     {
-        $originalPrice = $this->price;
+        if ($multipleByQuantity) {
+            $originalPrice = $this->price * $this->quantity;
+        } else {
+            $originalPrice = $this->price;
+        }
+
         $newPrice = 0.00;
         $processed = 0;
 
@@ -87,6 +94,9 @@ class ItemCollection extends Collection
      */
     public function getPriceSumWithConditions()
     {
-        return $this->getPriceWithConditions() * $this->quantity;
+
+        return $this->getPriceWithConditions(true);
+        //return $this->getPriceWithConditions() * $this->quantity;
+
     }
 }

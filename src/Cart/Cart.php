@@ -106,10 +106,11 @@ class Cart
      * @param int $quantity
      * @param array $attributes
      * @param CartCondition|array $conditions
+     * @param array $options
      * @return $this
      * @throws InvalidItemException
      */
-    public function add($id, $name = null, $price = null, $quantity = null, $attributes = array(), $conditions = array())
+    public function add($id, $name = null, $price = null, $quantity = null, $attributes = [], $conditions = [], $options = [])
     {
         // if the first argument is an array,
         // we will need to call add again
@@ -123,8 +124,9 @@ class Cart
                         $item['name'],
                         $item['price'],
                         $item['quantity'],
-                        Helpers::issetAndHasValueOrAssignDefault($item['attributes'], array()),
-                        Helpers::issetAndHasValueOrAssignDefault($item['conditions'], array())
+                        Helpers::issetAndHasValueOrAssignDefault($item['attributes'], []),
+                        Helpers::issetAndHasValueOrAssignDefault($item['conditions'], []),
+                        Helpers::issetAndHasValueOrAssignDefault($item['options'], [])
                     );
                 }
             } else {
@@ -133,8 +135,9 @@ class Cart
                     $id['name'],
                     $id['price'],
                     $id['quantity'],
-                    Helpers::issetAndHasValueOrAssignDefault($id['attributes'], array()),
-                    Helpers::issetAndHasValueOrAssignDefault($id['conditions'], array())
+                    Helpers::issetAndHasValueOrAssignDefault($id['attributes'], []),
+                    Helpers::issetAndHasValueOrAssignDefault($id['conditions'], []),
+                    Helpers::issetAndHasValueOrAssignDefault($id['options'], [])
                 );
             }
 
@@ -149,6 +152,7 @@ class Cart
             'quantity' => $quantity,
             'attributes' => new ItemAttributeCollection($attributes),
             'conditions' => $conditions,
+            'options' => new ItemOptionCollection($options)
         ));
 
         // get the cart
@@ -207,6 +211,8 @@ class Cart
                 }
             } elseif ($key == 'attributes') {
                 $item[$key] = new ItemAttributeCollection($value);
+            } elseif ($key == 'options') {
+                $item[$key] = new ItemOptionCollection($value);
             } else {
                 $item[$key] = $value;
             }
@@ -280,7 +286,7 @@ class Cart
 
         $this->session->put(
             $this->sessionKeyCartItems,
-            array()
+            []
         );
 
         $this->events->fire($this->getInstanceName() . '.cleared', array($this));
@@ -430,7 +436,7 @@ class Cart
 
                 if ($item['conditions'] instanceof $conditionInstance) {
                     if ($tempConditionsHolder->getName() == $conditionName) {
-                        $item['conditions'] = array();
+                        $item['conditions'] = [];
                     }
                 }
             }
@@ -456,7 +462,7 @@ class Cart
         }
 
         $this->update($itemId, array(
-            'conditions' => array()
+            'conditions' => []
         ));
 
         return true;
@@ -473,7 +479,7 @@ class Cart
     {
         $this->session->put(
             $this->sessionKeyCartConditions,
-            array()
+            []
         );
     }
 

@@ -1,8 +1,9 @@
-<?php namespace Mrtom90\LaravelShop\Cart\Facades;
+<?php namespace Mrtom90\LaravelShop\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class CartFacade extends Facade {
+class Cart extends Facade
+{
 
     protected static function getFacadeAccessor()
     {
