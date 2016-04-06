@@ -1,4 +1,5 @@
 <?php namespace Mrtom90\LaravelShop\Cart;
+
 use Mrtom90\LaravelShop\Cart\Exceptions\InvalidConditionException;
 use Mrtom90\LaravelShop\Cart\Helpers\Helpers;
 use Mrtom90\LaravelShop\Cart\Validators\CartConditionValidator;
@@ -9,8 +10,8 @@ use Mrtom90\LaravelShop\Cart\Validators\CartConditionValidator;
  * Date: 1/15/2015
  * Time: 9:02 PM
  */
-
-class CartCondition {
+class CartCondition
+{
 
     /**
      * @var array
@@ -32,12 +33,9 @@ class CartCondition {
     {
         $this->args = $args;
 
-        if( Helpers::isMultiArray($args) )
-        {
+        if (Helpers::isMultiArray($args)) {
             Throw new InvalidConditionException('Multi dimensional array is not supported.');
-        }
-        else
-        {
+        } else {
             $this->validate($this->args);
         }
     }
@@ -113,7 +111,7 @@ class CartCondition {
     {
         $this->apply($totalOrSubTotalOrPrice, $this->getValue());
 
-        return $this->parsedRawValue;
+        return round($this->parsedRawValue, 0);
     }
 
     /**
@@ -130,26 +128,20 @@ class CartCondition {
         // has a minus or plus sign so we can decide what to do with the
         // percentage, whether to add or subtract it to the total/subtotal/price
         // if we can't find any plus/minus sign, we will assume it as plus sign
-        if( $this->valueIsPercentage($conditionValue) )
-        {
-            if( $this->valueIsToBeSubtracted($conditionValue) )
-            {
-                $value = Helpers::normalizePrice( $this->cleanValue($conditionValue) );
+        if ($this->valueIsPercentage($conditionValue)) {
+            if ($this->valueIsToBeSubtracted($conditionValue)) {
+                $value = Helpers::normalizePrice($this->cleanValue($conditionValue));
 
                 $this->parsedRawValue = $totalOrSubTotalOrPrice * ($value / 100);
 
                 $result = floatval($totalOrSubTotalOrPrice - $this->parsedRawValue);
-            }
-            else if ( $this->valueIsToBeAdded($conditionValue) )
-            {
-                $value = Helpers::normalizePrice( $this->cleanValue($conditionValue) );
+            } else if ($this->valueIsToBeAdded($conditionValue)) {
+                $value = Helpers::normalizePrice($this->cleanValue($conditionValue));
 
                 $this->parsedRawValue = $totalOrSubTotalOrPrice * ($value / 100);
 
                 $result = floatval($totalOrSubTotalOrPrice + $this->parsedRawValue);
-            }
-            else
-            {
+            } else {
                 $value = Helpers::normalizePrice($conditionValue);
 
                 $this->parsedRawValue = $totalOrSubTotalOrPrice * ($value / 100);
@@ -160,29 +152,23 @@ class CartCondition {
 
         // if the value has no percent sign on it, the operation will not be a percentage
         // next is we will check if it has a minus/plus sign so then we can just deduct it to total/subtotal/price
-        else
-        {
-            if( $this->valueIsToBeSubtracted($conditionValue) )
-            {
-                $this->parsedRawValue = Helpers::normalizePrice( $this->cleanValue($conditionValue) );
+        else {
+            if ($this->valueIsToBeSubtracted($conditionValue)) {
+                $this->parsedRawValue = Helpers::normalizePrice($this->cleanValue($conditionValue));
 
                 $result = floatval($totalOrSubTotalOrPrice - $this->parsedRawValue);
-            }
-            else if ( $this->valueIsToBeAdded($conditionValue) )
-            {
-                $this->parsedRawValue = Helpers::normalizePrice( $this->cleanValue($conditionValue) );
+            } else if ($this->valueIsToBeAdded($conditionValue)) {
+                $this->parsedRawValue = Helpers::normalizePrice($this->cleanValue($conditionValue));
 
                 $result = floatval($totalOrSubTotalOrPrice + $this->parsedRawValue);
-            }
-            else
-            {
+            } else {
                 $this->parsedRawValue = Helpers::normalizePrice($conditionValue);
 
                 $result = floatval($totalOrSubTotalOrPrice + $this->parsedRawValue);
             }
         }
 
-        return $result;
+        return round($result, 0);
     }
 
     /**
@@ -226,7 +212,7 @@ class CartCondition {
      */
     protected function cleanValue($value)
     {
-        return str_replace(array('%','-','+'),'',$value);
+        return str_replace(array('%', '-', '+'), '', $value);
     }
 
     /**
@@ -246,8 +232,7 @@ class CartCondition {
 
         $validator = CartConditionValidator::make($args, $rules);
 
-        if( $validator->fails() )
-        {
+        if ($validator->fails()) {
             throw new InvalidConditionException($validator->messages()->first());
         }
     }

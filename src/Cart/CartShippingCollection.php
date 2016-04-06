@@ -5,11 +5,12 @@
  * Date: 2016/04/04
  * Time: 13:02
  */
+
 namespace Mrtom90\LaravelShop\Cart;
 
 use Illuminate\Support\Collection;
 
-class CartConditionCollection extends Collection
+class CartShippingCollection extends Collection
 {
 
 }

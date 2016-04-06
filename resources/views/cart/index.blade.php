@@ -1,56 +1,37 @@
 @extends('courier::layouts.app')
-
 @section('main_content')
-    {{$items->count()}}
+
     @if(Cart::isEmpty())
-        Empty Cart
-    @endif
-    <table class="table">
-        <tr>
-            <th colspan="2">商品情報</th>
-            <th>販売価格</th>
-            <th>数量</th>
-            <th></th>
-        </tr>
-        @foreach($items as $item)
-            <tr>
-                <td width="80">
-                    @if($item->attributes->has('thumbnail'))
-                        <img width="80" src="{{$item->attributes->thumbnail}}" alt="">
+        現在、買い物かごには商品が入っていません。ぜひお買い物をお楽しみください。<br>
+        ご利用をお待ちしております。<br><br>
+
+        <a href="/">トップページはこちら</a>
+    @else
+        {{$items->count()}}商品がカートに入っています
+
+        @include('courier::cart.components.product_list',['can_edit'=>1])
+        <div class="row">
+            <div class="col-xs-5 col-xs-offset-7">
+                @include('courier::cart.components.total_list')
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 col-xs-offset-7">
+                <div class="text-right">
+
+                    @if(Cart::quoteFlag())
+                        <form action="{{action('\\Mrtom90\\LaravelShop\\Http\\Controllers\\CartController@loginForm')}}">
+                            <button type="submit" class="btn btn-success btn-block">お見積手続へ</button>
+                        </form>
+                    @else
+                        <form action="{{action('\\Mrtom90\\LaravelShop\\Http\\Controllers\\CartController@loginForm')}}">
+                            <button type="submit" class="btn btn-info btn-block">ご購入手続きへ</button>
+                        </form>
                     @endif
-                </td>
-                <td>
-                    {{$item->id}}
-                    {{$item->name}}
-                    <ul class="list-unstyled">
-                        @foreach( $item->options as $label => $option)
-                            <li><span class="text-muted">{{$label}}：</span>{{$option}}</li>
-                        @endforeach
-                    </ul>
-                </td>
-                <td>{{$item->price}}</td>
-                <td>{{$item->quantity}}</td>
-                <td>
-                    <ul class="list-unstyled">
-                        <li>{{$item->getPriceSum()}}</li>
-                        <li>小計(税別)：{{$item->getPriceSumWithConditions()}}</li>
-                        @foreach($item->conditions as $condition)
-                            <li>{{$condition->getName()}}：{{$condition->getValue()}}円</li>
-                        @endforeach
-                    </ul>
+                </div>
+            </div>
+        </div>
+        @include('courier::cart.components.postage_list')
 
-
-                </td>
-
-            </tr>
-        @endforeach
-    </table>
-    <ul class="list-unstyled">
-        {{Cart::getSubTotal()}}
-        @foreach($conditions as $condition)
-            <li>{{$condition->getName()}}：{{$condition->getCalculatedValue(Cart::getSubTotal())}}円</li>
-        @endforeach
-    </ul>
-
-    {{$cartTotal = Cart::getTotal()}}
+    @endif
 @stop

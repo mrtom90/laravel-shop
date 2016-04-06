@@ -1,6 +1,7 @@
 <?php
 namespace Mrtom90\LaravelShop\Providers;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Mrtom90\LaravelShop\Cart\Cart;
 
@@ -45,6 +46,12 @@ class CartServiceProvider extends ServiceProvider
                 $session_key
             );
         });
+        $this->app->register('Mrtom90\LaravelShop\Providers\HtmlServiceProvider');
+
+        $loader = AliasLoader::getInstance();
+        $loader->alias('Html', 'Mrtom90\LaravelShop\Facades\HtmlFacade');
+        $loader->alias('Form', 'Mrtom90\LaravelShop\Facades\FormFacade');
+
     }
 
     /**

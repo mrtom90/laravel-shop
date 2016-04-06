@@ -11,7 +11,7 @@ use Mrtom90\LaravelShop\Cart\Validators\CartItemValidator;
  */
 class Cart
 {
-
+    use MetaData;
     /**
      * the item storage
      *
@@ -47,6 +47,9 @@ class Cart
      */
     protected $sessionKeyCartConditions;
 
+
+    protected $sessionKeyQuoteFlag;
+
     /**
      * our object constructor
      *
@@ -62,6 +65,7 @@ class Cart
         $this->instanceName = $instanceName;
         $this->sessionKeyCartItems = $session_key . '_cart_items';
         $this->sessionKeyCartConditions = $session_key . '_cart_conditions';
+        $this->sessionKeyQuoteFlag = $session_key . '_cart_is_quote';
         $this->events->fire($this->getInstanceName() . '.created', array($this));
     }
 
@@ -186,7 +190,8 @@ class Cart
 
         $cart = $this->getContent();
 
-        $item = $cart->pull($id);
+        //$item = $cart->pull($id);
+        $item = $cart->get($id);
 
         foreach ($data as $key => $value) {
             // if the key is currently "quantity" we will need to check if an arithmetic
@@ -218,7 +223,7 @@ class Cart
             }
         }
 
-        $cart->put($id, $item);
+        //$cart->put($id, $item);
 
         $this->save($cart);
 
@@ -396,9 +401,10 @@ class Cart
      *
      * @param $itemId
      * @param $conditionName
+     * @param bool $SelectConditionByType
      * @return bool
      */
-    public function removeItemCondition($itemId, $conditionName)
+    public function removeItemCondition($itemId, $conditionName, $SelectConditionByType = false)
     {
         if (!$item = $this->getContent()->get($itemId)) {
             return false;
@@ -419,9 +425,16 @@ class Cart
             // to the given name the user wants to remove, if so, remove it
             if (is_array($tempConditionsHolder)) {
                 foreach ($tempConditionsHolder as $k => $condition) {
-                    if ($condition->getName() == $conditionName) {
-                        unset($tempConditionsHolder[$k]);
+                    if ($SelectConditionByType) {
+                        if ($condition->getType() == $conditionName) {
+                            unset($tempConditionsHolder[$k]);
+                        }
+                    } else {
+                        if ($condition->getName() == $conditionName) {
+                            unset($tempConditionsHolder[$k]);
+                        }
                     }
+
                 }
 
                 $item['conditions'] = $tempConditionsHolder;
@@ -435,8 +448,15 @@ class Cart
                 $conditionInstance = "Mrtom90\\LaravelShop\\Cart\\CartCondition";
 
                 if ($item['conditions'] instanceof $conditionInstance) {
-                    if ($tempConditionsHolder->getName() == $conditionName) {
-                        $item['conditions'] = [];
+                    if ($SelectConditionByType) {
+
+                        if ($tempConditionsHolder->getName() == $conditionName) {
+                            $item['conditions'] = [];
+                        }
+                    } else {
+                        if ($tempConditionsHolder->getType() == $conditionName) {
+                            $item['conditions'] = [];
+                        }
                     }
                 }
             }
@@ -447,6 +467,11 @@ class Cart
         ));
 
         return true;
+    }
+
+    public function removeItemConditionByType($itemId, $conditionName)
+    {
+        return $this->removeItemCondition($itemId, $conditionName, true);
     }
 
     /**
@@ -485,8 +510,8 @@ class Cart
 
     /**
      * get cart sub total
-     *
      * @return float
+     * @internal param bool $numberFormat
      */
     public function getSubTotal()
     {
@@ -497,6 +522,20 @@ class Cart
         });
 
         return floatval($sum);
+
+    }
+
+    public function getSubTotalWithoutConditions()
+    {
+        $cart = $this->getContent();
+
+        $sum = $cart->sum(function ($item) {
+            return $item->getPriceSum();
+        });
+
+        return floatval($sum);
+
+
     }
 
     /**
@@ -695,5 +734,40 @@ class Cart
         $item[$key] = (int)$value;
 
         return $item;
+    }
+
+
+    public function getContentGroupByShipping()
+    {
+        $items = [];
+
+        foreach ($this->getContent() as $item) {
+            if ($item->attributes->has('shipping_code')) {
+                //Lay shipping code
+                $shipping_code = $item->attributes->shipping_code;
+
+                $items[$shipping_code]['items'][] = $item;
+
+                if (!isset($items[$shipping_code]['total'])) {
+                    $items[$shipping_code]['total'] = 0;
+                }
+                $items[$shipping_code]['total'] += $item->getConditionsSum();
+            }
+        }
+        return new CartShippingCollection($items);
+    }
+
+    public function quoteFlag()
+    {
+        if ($this->session->has($this->sessionKeyQuoteFlag)) {
+            return $this->session->get($this->sessionKeyQuoteFlag);
+        }
+        $this->session->put($this->sessionKeyQuoteFlag, false);
+        return false;
+    }
+
+    public function setQuoteFlag($flag)
+    {
+        return $this->session->put($this->sessionKeyQuoteFlag, (boolean)$flag);
     }
 }

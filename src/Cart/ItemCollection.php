@@ -99,4 +99,14 @@ class ItemCollection extends Collection
         //return $this->getPriceWithConditions() * $this->quantity;
 
     }
+
+
+    public function getConditionsSum()
+    {
+
+        return $this->getPriceWithConditions(true) - $this->getPriceSum();
+        //return $this->getPriceWithConditions() * $this->quantity;
+
+    }
+
 }
