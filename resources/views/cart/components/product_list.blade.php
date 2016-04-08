@@ -1,7 +1,7 @@
 <table class="table table-bordered">
     <tr>
         <th colspan="2">商品情報</th>
-        <th>販売価格</th>
+        <th class="text-nowrap">販売価格</th>
         <th>数量</th>
         <th></th>
     </tr>
@@ -22,9 +22,10 @@
                     @endforeach
                 </ul>
             </td>
-            <td>{{$item->price}}</td>
-            <td width="120">
-                @if(isset($can_edit))
+            <td>{{number_format($item->price)}}円</td>
+            @if(isset($can_edit))
+                <td width="120">
+
                     <form method="POST"
                           action="{{action("\\Mrtom90\\LaravelShop\\Http\\Controllers\\CartController@update",['id'=>$item->id])}}"
                           accept-charset="UTF-8">
@@ -34,7 +35,7 @@
                             <input type="text" class="form-control input-sm p1" name="qty"
                                    value="{{$item->quantity}}">
 
-                            <div class="input-group-btn"  style="width: 50px !important;">
+                            <div class="input-group-btn" style="width: 50px !important;">
                                 <button class="btn btn-default btn-sm btn-block text-nowrap"
                                         type="submit">再計算
                                 </button>
@@ -56,20 +57,24 @@
                         </form>
 
                     </div>
-                @else
+                </td>
+            @else
+                <td class="text-center">
                     {{$item->quantity}}
-                @endif
-            </td>
-            <td>
+                </td>
+            @endif
+
+            <td class="text-nowrap">
                 <ul class="list-unstyled">
-                    <li>商品合計：{{number_format($item->getPriceSum())}}</li>
+                    <li>商品合計：{{number_format($item->getPriceSum())}}円</li>
                     @foreach($item->conditions as $condition)
                         <li>{!! $condition->getName() !!}：{{number_format($condition->getValue())}}円</li>
                     @endforeach
                     @if(Cart::quoteFlag())
                         送料：別途見積
                     @endif
-                    <li><strong>小計（税別）：{{number_format($item->getPriceSumWithConditions())}}</strong></li>
+                    <li>
+                        <strong>小計<small>（税別）</small>：{{number_format($item->getPriceSumWithConditions())}}円</strong></li>
                 </ul>
             </td>
         </tr>

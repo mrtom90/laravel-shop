@@ -508,6 +508,19 @@ class Cart
         );
     }
 
+    public function getPostage()
+    {
+        $cart = $this->getContent();
+
+        $sum = $cart->sum(function ($item) {
+            return $item->getConditionsSumByType('shipping');
+        });
+
+        return floatval($sum);
+
+
+    }
+
     /**
      * get cart sub total
      * @return float
@@ -769,5 +782,22 @@ class Cart
     public function setQuoteFlag($flag)
     {
         return $this->session->put($this->sessionKeyQuoteFlag, (boolean)$flag);
+    }
+
+
+    public function setShippingZone($shipping_zone)
+    {
+        $this->setMetaData('shipping_zone', $shipping_zone);
+        return $this->getMetaData('shipping_zone');
+    }
+
+    public function getShippingZone()
+    {
+        $shipping_zone = $this->getMetaData('shipping_zone');
+        if (empty($shipping_zone)) {
+            $shipping_zone = "東京都";
+            return $this->setShippingZone($shipping_zone);
+        }
+        return $shipping_zone;
     }
 }

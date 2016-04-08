@@ -4,6 +4,7 @@ namespace Mrtom90\LaravelShop\Providers;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Mrtom90\LaravelShop\Cart\Cart;
+use Mrtom90\LaravelShop\Search\Search;
 
 class CartServiceProvider extends ServiceProvider
 {
@@ -46,12 +47,16 @@ class CartServiceProvider extends ServiceProvider
                 $session_key
             );
         });
-        $this->app->register('Mrtom90\LaravelShop\Providers\HtmlServiceProvider');
 
+        $this->app['Search'] = $this->app->share(function () {
+            return new Search();
+        });
+
+        $this->app->register('Mrtom90\LaravelShop\Providers\HtmlServiceProvider');
         $loader = AliasLoader::getInstance();
         $loader->alias('Html', 'Mrtom90\LaravelShop\Facades\HtmlFacade');
         $loader->alias('Form', 'Mrtom90\LaravelShop\Facades\FormFacade');
-
+        $loader->alias('Search', 'Mrtom90\LaravelShop\Facades\SearchFacade');
     }
 
     /**

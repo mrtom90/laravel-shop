@@ -1,5 +1,8 @@
 @extends('courier::layouts.app')
 @section('main_content')
+    <div class="header-gray m-b-20">最終確認</div>
+    @include('courier::cart.components.breadcrumb')
+
     {!! Form::open(['action'=>'\\Mrtom90\\LaravelShop\\Http\\Controllers\\CartController@doOrder']) !!}
 
     <div class="alert alert-warning">
@@ -9,13 +12,24 @@
     </div>
     <div class="panel panel-default">
 
+        <div class="panel-heading">ご注文内容詳細</div>
+        @include('courier::cart.components.product_list')
+    </div>
+    <div class="row">
+        <div class="col-xs-5 col-xs-offset-7">
+            @include('courier::cart.components.total_list')
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+
         <div class="panel-heading">お届け先</div>
         <table class="table table-bordered">
             <tr>
                 <td width="110">住所</td>
                 <td>
                     <div class="pull-right">
-                        <div class="btn btn-default">変更</div>
+                        <a href="{{url()->previous()}}#shippingForm" class="btn btn-default">変更</a>
                     </div>
                     @include('frontend.mobile.cart.components.address_text',['address' => Cart::getMetaData('customer_info.shipping')])
                 </td>
@@ -28,7 +42,7 @@
                 <td width="110">住所</td>
                 <td>
                     <div class="pull-right">
-                        <div class="btn btn-default">変更</div>
+                        <a href="{{url()->previous()}}#billingForm" class="btn btn-default">変更</a>
                     </div>
                     @if($customer_info['billing_address'] == 0)
                         <strong>お届け先と同じ</strong>
@@ -58,16 +72,9 @@
             <textarea class="form-control"></textarea>
         </div>
 
-        <div class="panel-heading">ご注文内容詳細</div>
-        @include('courier::cart.components.product_list')
-
     </div>
 
-    <div class="row">
-        <div class="col-xs-5 col-xs-offset-7">
-            @include('courier::cart.components.total_list')
-        </div>
-    </div>
+
 
     <button type="submit" class="btn-info btn">送信</button>
     {!! Form::close() !!}

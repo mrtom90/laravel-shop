@@ -23,7 +23,7 @@ class CalculatePostage extends UseCase
 
     private function calculatePostage()
     {
-        $currentArea = "沖縄";
+        $currentArea = Cart::getShippingZone();
 
         $quote_flag = false;
         foreach (Cart::getContentGroupByShipping() as $shipping_code => $content) {
@@ -40,7 +40,7 @@ class CalculatePostage extends UseCase
                 }
                 if (!$quote_flag) {
                     $shipping_condition = new CartCondition(array(
-                        'name' => '送料（税別）<a href="#postage"><i class="fa fa-question-circle"></i></a>',
+                        'name' => '送料<small>（税別）</small>',
                         'type' => 'shipping',
                         'target' => 'item',
                         'value' => $postage,

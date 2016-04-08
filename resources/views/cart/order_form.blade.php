@@ -1,9 +1,26 @@
 @extends('courier::layouts.app')
 @section('main_content')
+    <div class="header-gray m-b-20">お客様情報入力画面</div>
+    @include('courier::cart.components.breadcrumb')
+
     {!! Form::model(Cart::getMetaData('customer_info'),['action' => '\\Mrtom90\\LaravelShop\\Http\\Controllers\\CartController@reviewOrder','class'=>'form-horizontal']) !!}
     <div class="panel panel-default">
-        <div class="panel-heading">お届け先</div>
+
+        <div class="panel-heading">ご注文内容詳細</div>
+        @include('courier::cart.components.product_list')
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6 col-xs-offset-6">
+            @include('courier::cart.components.total_list')
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" name="shippingForm" id="shippingForm">お届け先</div>
         <div class="panel-body">
+
+
             @if(auth()->guest())
                 {!! Form::hidden('shipping_address','-') !!}
                 @include('courier::cart.components.address_form',['prefix'=>'shipping'])
@@ -56,7 +73,7 @@
             @endif
 
         </div>
-        <div class="panel-heading">ご請求先</div>
+        <div class="panel-heading" name="billingForm" id="billingForm">ご請求先</div>
         <div class="panel-body">
             <div class="form-group">
                 <label class="col-sm-3 control-label">請求先 <span class="label label-danger p-2">必須</span></label>
@@ -101,17 +118,17 @@
                 </li>
                 @if(!auth()->guest())
 
-                @foreach($shipping_addresses as $address)
-                    <li id="billing_list_{{$address->id}}" class="item" style="display: none;">
-                        <div class="row">
-                            <div class="col-sm-9 col-sm-offset-3">
-                                <div class="well well-sm">s
-                                    @include('courier::cart.components.address_text',['address' => $address])
+                    @foreach($shipping_addresses as $address)
+                        <li id="billing_list_{{$address->id}}" class="item" style="display: none;">
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <div class="well well-sm">s
+                                        @include('courier::cart.components.address_text',['address' => $address])
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
-                @endforeach
+                        </li>
+                    @endforeach
                 @endif
 
             </ul>
@@ -182,14 +199,6 @@
                     @include('courier::cart.components.payment_form')
                 </div>
             </div>
-        </div>
-        <div class="panel-heading">ご注文内容詳細</div>
-        @include('courier::cart.components.product_list')
-
-    </div>
-    <div class="row">
-        <div class="col-xs-5 col-xs-offset-7">
-            @include('courier::cart.components.total_list')
         </div>
 
     </div>

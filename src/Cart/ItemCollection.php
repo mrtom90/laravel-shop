@@ -109,4 +109,38 @@ class ItemCollection extends Collection
 
     }
 
+    /**
+     * get the single price in which conditions are already applied
+     *
+     * @param string $type
+     * @return mixed|null
+     * @internal param bool $multipleByQuantity
+     */
+    public function getConditionsSumByType($type = 'shipping')
+    {
+        $originalPrice = 0;
+
+        $newPrice = 0.00;
+        $processed = 0;
+
+        if ($this->hasConditions()) {
+            if (is_array($this->conditions)) {
+                foreach ($this->conditions as $condition) {
+                    if ($condition->getTarget() === 'item' && $condition->getType() == $type) {
+                        ($processed > 0) ? $toBeCalculated = $newPrice : $toBeCalculated = $originalPrice;
+                        $newPrice = $condition->applyCondition($toBeCalculated);
+                        $processed++;
+                    }
+                }
+            } else {
+                if ($this['conditions']->getTarget() === 'item' && $this['conditions']->getType() == $type) {
+                    $newPrice = $this['conditions']->applyCondition($originalPrice);
+                }
+            }
+
+            return $newPrice;
+        }
+        return $originalPrice;
+    }
+
 }
