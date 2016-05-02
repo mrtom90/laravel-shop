@@ -761,10 +761,16 @@ class Cart
 
                 $items[$shipping_code]['items'][] = $item;
 
-                if (!isset($items[$shipping_code]['total'])) {
-                    $items[$shipping_code]['total'] = 0;
+                if (!isset($items[$shipping_code]['priceSum'])) {
+                    $items[$shipping_code]['priceSum'] = 0;
                 }
-                $items[$shipping_code]['total'] += $item->getConditionsSum();
+                $items[$shipping_code]['priceSum'] += $item->getPriceSum();
+
+                if (!isset($items[$shipping_code]['quantitySum'])) {
+                    $items[$shipping_code]['quantitySum'] = 0;
+                }
+                $items[$shipping_code]['quantitySum'] += $item->getQuantitySum();
+
             }
         }
         return new CartShippingCollection($items);

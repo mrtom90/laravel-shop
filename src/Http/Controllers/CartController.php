@@ -69,30 +69,6 @@ class CartController extends BaseController
         CalculatePostage::perform();
     }
 
-
-    /**
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    function update($id)
-    {
-        $qty = request('qty');
-
-        if ($qty <= 0) {
-            Cart::remove($id);
-            return back();
-        }
-
-        Cart::update($id, array(
-            'quantity' => array(
-                'relative' => false,
-                'value' => $qty
-            ),
-        ));
-        CalculatePostage::perform();
-        return back();
-    }
-
     /**
      * @param $id
      * @return \Illuminate\Http\RedirectResponse

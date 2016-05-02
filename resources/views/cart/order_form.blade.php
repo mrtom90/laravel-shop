@@ -187,23 +187,72 @@
                     <div class="col-sm-9">
                         {!!  Form::password('password_confirmation',['class'=>'form-control ime-off','autocomplete'=>'off','placeholder'=>''])  !!}
                         {!!  $errors->first('password_confirmation','<span class="help-block">:message</span>')  !!}
-
                     </div>
                 </div>
             @endif
-
             <div class="form-group">
-                <label class="col-sm-3 control-label">お支払方法 <span class="label label-danger p-2">必須</span></label>
+                <label class="col-sm-3 control-label">お支払方法@if(Cart::quoteFlag())希望 @endif <span
+                            class="label label-danger p-2">必須</span></label>
 
                 <div class="col-sm-9">
                     @include('courier::cart.components.payment_form')
                 </div>
             </div>
         </div>
+        <div class="panel-heading" name="billingForm" id="billingForm">使用用途（パレットの方のみ）</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">使用用途</label>
 
+                <div class="col-sm-9">
+
+                    <label class="radio-inline">
+                        <input type="radio" name="extends[usages]"
+                               @if(Cart::getMetaData('customer_info.extends.usages') == "ワンウェイ用")
+                               checked
+                               @endif value="ワンウェイ用"
+                               style="margin: 0">　　ワンウェイ用
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="extends[usages]"
+                               @if(Cart::getMetaData('customer_info.extends.usages') == "保管用")
+                               checked
+                               @endif value="保管用"
+                               value="保管用" style="margin: 0">　　保管用
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="extends[usages]"
+                               @if(Cart::getMetaData('customer_info.extends.usages') == "その他")
+                               checked
+                               @endif value="その他"
+                               value="その他" style="margin: 0">　　その他
+                    </label><br>
+
+                    <div class="row m-t-5">
+                        <div class="col-xs-3">
+                            <label class="radio-inline">
+                                <input type="radio" name="extends[usages]"
+                                       @if(Cart::getMetaData('customer_info.extends.usages') == "DIY用")
+                                       checked
+                                       @endif value="DIY用" style="margin: 0">　　DIY用
+                            </label>
+                        </div>
+                        <div class="col-xs-5">
+                            {!!  Form::text('extends[diy_usages]',Cart::getMetaData('customer_info.extends.diy_usages'),['class'=>'form-control ime-off','autocomplete'=>'off'])  !!}
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="radio-inline p-0 m-0">
+                                （ベッド・テーブル等）
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
     <button type="submit" class="btn-info btn">送信</button>
-    @include('courier::cart.components.postage_list')
+    {{--@include('courier::cart.components.postage_list')--}}
 
     {!! Form::close() !!}
 @stop

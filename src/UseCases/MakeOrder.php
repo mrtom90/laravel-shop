@@ -94,9 +94,11 @@ class MakeOrder extends UseCase
 
         $this->order = Order::create([
             'user_id' => $this->user_id,
-            'addressee' => $this->customer_info['shipping'],
+            'shipping_address' => $this->customer_info['shipping_address'],
+            'shipping' => $this->customer_info['shipping'],
             'billing_address' => $this->customer_info['billing_address'],
             'billing' => $this->customer_info['billing'],
+            'extends' => $this->customer_info['extends'],
             'email' => $this->customer_info['email'],
             'subtotal' => Cart::getSubTotalWithoutConditions(),
             'total' => Cart::getTotal(),

@@ -7,7 +7,7 @@
         </li>
         <li>≫</li>
         <li>
-            <div @if(Route::getCurrentRoute()->getActionName() == "Mrtom90\\LaravelShop\\Http\\Controllers\\CartController@quoteForm") class="label label-success fs-12 p-5" @endif>
+            <div @if(Route::getCurrentRoute()->getActionName() == "Mrtom90\\LaravelShop\\Http\\Controllers\\CartController@orderForm") class="label label-success fs-12 p-5" @endif>
                 お客様情報入力画面
             </div>
         </li>

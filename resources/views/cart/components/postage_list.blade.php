@@ -17,7 +17,7 @@
                         @endforeach
                     </ul>
                 </td>
-                <td>{{$content['total']}}円</td>
+                <td>{{var_dump($content)}}円</td>
                 <td></td>
             </tr>
         @endforeach

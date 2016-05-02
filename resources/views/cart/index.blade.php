@@ -1,12 +1,19 @@
 @extends('courier::layouts.app')
 @section('main_content')
-    <div class="header-gray m-b-20">商品確認画面</div>
+    @if(Cart::quoteFlag())
+        <div class="header-gray m-b-20">見積商品確認画面</div>
+    @else
+        <div class="header-gray m-b-20">購入商品確認画面</div>
+    @endif
     @include('courier::cart.components.breadcrumb')
     @if(Cart::isEmpty())
-        現在、買い物かごには商品が入っていません。ぜひお買い物をお楽しみください。<br>
-        ご利用をお待ちしております。<br><br>
+        現在、買い物かごには商品が入っていません。<br>
+        ぜひお買い物をお楽しみください。ご利用をお待ちしております。<br><br>
 
-        <a href="/">トップページはこちら</a>
+        <div class="text-center">
+            <a href="javascript:history.back();" class="btn btn-info">前のページに戻る</a>
+            <a href="/" class="btn btn-default">トップページはこちら</a>
+        </div>
     @else
         {{$items->count()}}商品がカートに入っています
 

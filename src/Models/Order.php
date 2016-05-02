@@ -13,11 +13,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    public $fillable = ['user_id', 'shipping', 'billing_address_type', 'billing', 'email', 'subtotal', 'postage', 'tax', 'total'];
+    public $fillable = ['user_id', 'shipping', 'billing_address_type', 'billing', 'extends', 'email', 'subtotal', 'postage', 'tax', 'total'];
 
     public $casts = [
         'shipping' => 'json',
-        'billing' => 'json'
+        'billing' => 'json',
+        'extends' => 'json',
     ];
 
     public function items()

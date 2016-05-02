@@ -7,8 +7,11 @@
     </tr>
 
     <tr>
-        <th class="text-right warning">送料（税別）</th>
-        <td class="text-right">
+        <th class="text-right warning">送料（税別）<br>
+
+            <div class="fs-11 text-muted">（{{Cart::getShippingZone()}}へ）</div>
+        </th>
+        <td class="text-right" style="vertical-align: middle !important;">
             @if(Cart::quoteFlag())
                 別途見積
             @else
@@ -33,8 +36,6 @@
         <td class="text-right text-danger"><strong>{{number_format(Cart::getTotal())}}
                 <small>円</small>
             </strong></td>
-
-
     </tr>
 
 </table>

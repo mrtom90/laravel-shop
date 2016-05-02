@@ -27,6 +27,11 @@ class ItemCollection extends Collection
         return $this->price * $this->quantity;
     }
 
+    public function getQuantitySum()
+    {
+        return $this->quantity;
+    }
+
     public function __get($name)
     {
         if ($this->has($name)) return $this->get($name);

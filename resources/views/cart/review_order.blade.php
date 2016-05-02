@@ -63,6 +63,20 @@
                         希望 @endif</td>
             </tr>
         </table>
+        <div class="panel-heading">使用用途</div>
+        <table class="table table-bordered">
+            <tr>
+                <td width="110">使用用途</td>
+                <td>
+                    {{Cart::getMetaData('customer_info.extends.usages')}}
+                    @if(Cart::getMetaData('customer_info.extends.usages') == "DIY用" && !empty(Cart::getMetaData('customer_info.extends.diy_usages')))
+                        （{{Cart::getMetaData('customer_info.extends.diy_usages')}}）
+                    @endif
+                </td>
+            </tr>
+        </table>
+
+
         <div class="panel-heading">その他</div>
         <div class="panel-body">
             <strong>
@@ -78,6 +92,6 @@
 
     <button type="submit" class="btn-info btn">送信</button>
     {!! Form::close() !!}
-    @include('courier::cart.components.postage_list')
+    {{--@include('courier::cart.components.postage_list')--}}
 
 @stop
